@@ -88,7 +88,6 @@ a:hover .logo-word { color: var(--accent); }
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   font-size: 13px; color: var(--muted);
 }
-.site-footer .sep { color: var(--line); }
 
 /* ---------- exercise ---------- */
 .exercise { max-width: 1560px; margin: 0 auto; padding: 20px 24px 40px; }

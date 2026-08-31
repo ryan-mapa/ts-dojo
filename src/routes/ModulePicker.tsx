@@ -59,8 +59,6 @@ export function ModulePicker() {
         <a href="https://github.com/ryan-mapa/ts-dojo" target="_blank" rel="noopener noreferrer">
           Source on GitHub
         </a>
-        <span className="sep">·</span>
-        <span>graded in your browser by TypeScript 5.9</span>
       </footer>
     </main>
   );
