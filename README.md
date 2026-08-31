@@ -51,6 +51,7 @@ npm run typecheck  # tsc -b across app, node and test projects
 npm test           # engine + every exercise (see below)
 npm run build      # production bundle
 npm run smoke      # end-to-end browser check; needs `npm run dev` running
+npm run mobile     # touch-layout check under iPhone emulation
 ```
 
 `npm test` type-checks all 54 exercises against real `tsc` and asserts two things
@@ -65,6 +66,27 @@ prove the Monaco worker actually boots and returns diagnostics — the plumbing
 type-checks fine even when it silently does nothing. It covers one exercise of
 each file type, because the worker resolves script kind from the extension
 through a different path than the Node compiler host.
+
+## On a phone
+
+Monaco draws its own cursor rather than using a native text field, so none of
+the platform's touch aids — the iOS magnifier, the selection handles — are
+available, and placing a caret means hitting a target a few pixels wide. On
+touch the editor therefore gets an accessory key bar: arrow keys to step the
+cursor exactly, plus the characters that live two keyboard layers deep on a
+phone (`<`, `>`, `{`, `|`, `=>`). Type is larger, the caret is fatter, and hover
+cards, the context menu and the suggest widget are turned off — all three fight
+touch or blot out a small screen.
+
+Detection lives in `src/lib/touch.ts` and deliberately corroborates
+`(pointer: coarse)` with other signals: Chrome applies touch emulation
+asynchronously, so the first page in a fresh browser can report
+`pointer: fine` and `maxTouchPoints: 0` while genuinely being a touch context.
+`npm run mobile` reports which signals it saw and asserts only on what the app
+decided.
+
+Solving an exercise is still much nicer with a keyboard. Reading a lesson is
+fine anywhere.
 
 ## Curriculum
 

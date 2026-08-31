@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b --noEmit",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "mobile": "node scripts/mobile-check.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

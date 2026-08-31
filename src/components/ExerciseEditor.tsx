@@ -10,6 +10,8 @@ import {
 } from '../engine/checker';
 import { exerciseUri } from '../engine/compilerOptions';
 import type { Exercise } from '../content/types';
+import { KeyBar } from './KeyBar';
+import { isTouchLayout } from '../lib/touch';
 
 interface Props {
   exercise: Exercise;
@@ -19,6 +21,8 @@ interface Props {
   /** Increments when the hint panel asks for the solution to be pasted in. */
   revealSignal: number;
 }
+
+const COARSE_POINTER = isTouchLayout();
 
 export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, revealSignal }: Props) {
   const [result, setResult] = useState<GradeResult | null>(null);
@@ -63,6 +67,8 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
 
   return (
     <div className="workbench">
+      {COARSE_POINTER && <KeyBar editorRef={editorRef} />}
+
       <div className="editor-shell">
         <Editor
           key={exercise.id}
@@ -76,11 +82,24 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
           onChange={(v) => onCodeChange(v ?? '')}
           options={{
             minimap: { enabled: false },
-            fontSize: 14,
+            // Bigger type and looser lines on touch: the tap target for placing
+            // a cursor is one character cell, so its size is the whole game.
+            fontSize: COARSE_POINTER ? 16 : 14,
+            lineHeight: COARSE_POINTER ? 28 : 0,
             scrollBeyondLastLine: false,
             tabSize: 2,
             renderLineHighlight: 'none',
             padding: { top: 16, bottom: 16 },
+            // A fatter caret is much easier to actually see on a phone.
+            cursorWidth: COARSE_POINTER ? 3 : 2,
+            // These are all hostile on touch: long-press fights the context
+            // menu, hover cards fire on tap and cover the code, and the
+            // suggest widget blots out a small screen. Hover is a headline
+            // feature on desktop, so it stays there.
+            contextmenu: !COARSE_POINTER,
+            // Not a boolean in monaco 0.56: 'on' | 'off' | 'onKeyboardModifier'.
+            hover: { enabled: COARSE_POINTER ? 'off' : 'on' },
+            quickSuggestions: !COARSE_POINTER,
           }}
         />
       </div>
