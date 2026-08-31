@@ -52,7 +52,13 @@ npm test           # engine + every exercise (see below)
 npm run build      # production bundle
 npm run smoke      # end-to-end browser check; needs `npm run dev` running
 npm run mobile     # touch-layout check under iPhone emulation
+npm run verify-deploy  # wait for THIS commit's CI run and report its conclusion
 ```
+
+`verify-deploy` exists because `gh run list --limit 1` right after a push often
+returns the *previous* commit's run — GitHub takes a few seconds to create the
+new one — so it reports success for a deploy that has not started. It polls for
+a run matching `HEAD` instead.
 
 `npm test` type-checks all 54 exercises against real `tsc` and asserts two things
 about each: the **solution compiles clean**, and the **starter does not**. That
