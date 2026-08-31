@@ -7,14 +7,14 @@ import { SHARED_FLAGS } from '../src/engine/compilerOptions';
 const here = dirname(fileURLToPath(import.meta.url));
 const libsDir = join(here, '../src/engine/libs');
 
-const ASSERT_LIB = readFileSync(join(libsDir, 'assert.d.ts'), 'utf8');
-const NODE_STUBS = readFileSync(join(libsDir, 'node-stubs.d.ts'), 'utf8');
+const lib = (name: string) => readFileSync(join(libsDir, name), 'utf8');
 
 const OPTIONS: ts.CompilerOptions = {
   ...SHARED_FLAGS,
   target: ts.ScriptTarget.ES2022,
   module: ts.ModuleKind.ESNext,
   moduleResolution: ts.ModuleResolutionKind.Bundler,
+  jsx: ts.JsxEmit.Preserve,
 };
 
 /**
@@ -23,12 +23,18 @@ const OPTIONS: ts.CompilerOptions = {
  * diagnostic so callers can assert on emptiness (solutions) or non-emptiness
  * (starters).
  */
-export function checkExercise(code: string, hiddenChecks: string): ts.Diagnostic[] {
+export function checkExercise(
+  code: string,
+  hiddenChecks: string,
+  fileName = 'exercise.ts',
+): ts.Diagnostic[] {
   const files: Record<string, string> = {
-    '/exercise.ts': code,
+    [`/${fileName}`]: code,
     '/checks.ts': hiddenChecks,
-    '/lib/assert.d.ts': ASSERT_LIB,
-    '/lib/node-stubs.d.ts': NODE_STUBS,
+    '/lib/assert.d.ts': lib('assert.d.ts'),
+    '/lib/node-stubs.d.ts': lib('node-stubs.d.ts'),
+    '/lib/react-stubs.d.ts': lib('react-stubs.d.ts'),
+    '/lib/zod-stubs.d.ts': lib('zod-stubs.d.ts'),
   };
 
   const defaultLibName = ts.getDefaultLibFilePath(OPTIONS);

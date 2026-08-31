@@ -35,6 +35,18 @@ export const SHARED_FLAGS = {
 export const TARGET_ES2022 = 9;
 export const MODULE_ESNEXT = 99;
 export const MODULE_RESOLUTION_BUNDLER = 100;
+/**
+ * `preserve` rather than `react-jsx` on purpose. `react-jsx` makes the checker
+ * resolve `react/jsx-runtime`, which would mean stubbing the runtime module as
+ * well; `preserve` still type-checks JSX fully against the global JSX namespace
+ * and we never emit anyway.
+ */
+export const JSX_PRESERVE = 1;
 
-export const EXERCISE_URI = 'file:///exercise.ts';
+/** Most exercises are a plain module. React ones are `.tsx`; declaration-file
+ *  ones are `.d.ts` scripts, where `declare module` is ambient rather than an
+ *  augmentation of an existing module. */
+export const DEFAULT_EXERCISE_FILE = 'exercise.ts';
+
+export const exerciseUri = (fileName = DEFAULT_EXERCISE_FILE) => `file:///${fileName}`;
 export const CHECKS_URI = 'file:///checks.ts';

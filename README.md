@@ -53,7 +53,7 @@ npm run build      # production bundle
 npm run smoke      # end-to-end browser check; needs `npm run dev` running
 ```
 
-`npm test` type-checks all 20 exercises against real `tsc` and asserts two things
+`npm test` type-checks all 54 exercises against real `tsc` and asserts two things
 about each: the **solution compiles clean**, and the **starter does not**. That
 second assertion is the one that earns its keep — an exercise whose starter
 already satisfies the checks marks itself complete the moment you open it, and
@@ -62,20 +62,26 @@ automatically, which quietly pre-solved the `isRecord` exercise.
 
 `npm run smoke` drives a real Chrome via Playwright and is the only check that can
 prove the Monaco worker actually boots and returns diagnostics — the plumbing
-type-checks fine even when it silently does nothing.
+type-checks fine even when it silently does nothing. It covers one exercise of
+each file type, because the worker resolves script kind from the extension
+through a different path than the Node compiler host.
 
 ## Curriculum
 
-1. **Foundations & Inference** — 8 exercises
-2. **Objects, Unions & Narrowing** — 7 exercises
-3. **Generics & Constraints** — 5 exercises
-4. Utility & Mapped Types *(not written yet)*
-5. Conditional & Template Literal Types *(not written yet)*
-6. Modules, Declaration Files & tsconfig *(not written yet)*
-7. Backend Patterns *(not written yet)*
-8. Typing React *(not written yet)*
+54 exercises across 8 modules.
 
-Everything through module 3 is backend Node — config objects, `fs/promises`, env
+| # | Module | | |
+|---|---|---|---|
+| 1 | Foundations & Inference | 8 | annotations vs inference, widening, `any` vs `unknown`, `as const` |
+| 2 | Objects, Unions & Narrowing | 7 | discriminated unions, type predicates, exhaustiveness via `never` |
+| 3 | Generics & Constraints | 5 | type parameters, `extends`, `keyof`, indexed access, defaults |
+| 4 | Utility & Mapped Types | 7 | `Partial`/`Pick`/`Omit`/`Record`, then writing them yourself |
+| 5 | Conditional & Template Literal Types | 7 | `infer`, distributivity, key remapping, recursion |
+| 6 | Declaration Files & Ambient Types | 6 | `declare module`, wildcards, `declare global`, augmentation, overloads |
+| 7 | Backend Patterns | 7 | schema inference, `Result`, branded types, `satisfies` |
+| 8 | Typing React | 7 | props, `children`, `useState`, events, union props, generic components |
+
+Everything through module 7 is backend Node — config objects, `fs/promises`, env
 vars, HTTP handler shapes. No JSX until module 8.
 
 ## Adding an exercise
@@ -96,10 +102,31 @@ Add an object to the array in `src/content/modules/`. The whole shape:
 Then run `npm test`. If your starter accidentally already passes, it fails the
 suite rather than shipping.
 
+### File types
+
+`fileName` defaults to `exercise.ts`. Two others matter:
+
+- **`exercise.tsx`** — JSX. Checked with `jsx: preserve` against a global `JSX`
+  namespace, so there's no `react/jsx-runtime` to stub. Monaco has no TSX
+  language mode, so JSX tags render uncolored; type checking is unaffected.
+- **`exercise.d.ts`** — a *script* (no imports or exports at the top level).
+  This is the only place `declare module 'x'` declares a **new** module rather
+  than augmenting an existing one, which is what makes the "type an untyped
+  package" exercises possible. The hidden checks then import from the module the
+  exercise declared, rather than from `./exercise`.
+
+### Ambient libs
+
 Exercises get `Expect`, `Equal`, `NotEqual`, `ExpectFalse` and `Extends` as
-globals, plus a curated slice of `@types/node` — both in
-`src/engine/libs/`, injected into the compiler as ambient libs. Full
-`@types/node` is megabytes and would slow worker startup; extend the stub when an
-exercise needs something it lacks.
+globals, plus curated slices of `@types/node`, `@types/react` and `zod` — all in
+`src/engine/libs/`, injected into the compiler as ambient libs. The real packages
+are megabytes and would slow worker startup; extend a stub when an exercise needs
+something it lacks.
+
+The zod stub covers `string`/`number`/`boolean`/`object`/`array`/`optional` and,
+most importantly, `z.infer`. Note that `z` is declared as a **namespace** merged
+with values, not a const — that merging is what lets one name work in both the
+value and type worlds, and declaring it as a const makes `z.infer` a "cannot find
+namespace" error.
 
 [tc]: https://github.com/type-challenges/type-challenges

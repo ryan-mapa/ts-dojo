@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Editor from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
-import { configureTypeScript, grade, loadChecks, type GradeResult } from '../engine/checker';
-import { EXERCISE_URI } from '../engine/compilerOptions';
+import {
+  configureTypeScript,
+  disposeOtherExerciseModels,
+  grade,
+  loadChecks,
+  type GradeResult,
+} from '../engine/checker';
+import { exerciseUri } from '../engine/compilerOptions';
 import type { Exercise } from '../content/types';
 
 interface Props {
@@ -28,20 +34,23 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
   // The checks model lives alongside the editor's model but is never displayed.
   // Note there's no `setResult(null)` here: the parent keys this component on
   // exercise.id, so switching exercises remounts it with fresh state already.
+  const uri = exerciseUri(exercise.fileName);
+
   useEffect(() => {
     loadChecks(exercise.hiddenChecks);
-  }, [exercise.hiddenChecks]);
+    disposeOtherExerciseModels(uri);
+  }, [exercise.hiddenChecks, uri]);
 
   const check = useCallback(async () => {
     setChecking(true);
     try {
-      const r = await grade();
+      const r = await grade(exercise.fileName);
       setResult(r);
       if (r.passed) onPass();
     } finally {
       setChecking(false);
     }
-  }, [onPass]);
+  }, [onPass, exercise.fileName]);
 
   const showSolution = useCallback(() => {
     editorRef.current?.setValue(exercise.solution);
@@ -57,7 +66,7 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
       <div className="editor-shell">
         <Editor
           key={exercise.id}
-          path={EXERCISE_URI}
+          path={uri}
           defaultLanguage="typescript"
           defaultValue={initialCode}
           theme="vs-dark"

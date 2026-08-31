@@ -2,47 +2,22 @@ import type { Module } from './types';
 import { foundations } from './modules/01-foundations';
 import { narrowing } from './modules/02-narrowing';
 import { generics } from './modules/03-generics';
+import { utilityTypes } from './modules/04-utility-types';
+import { conditionalTypes } from './modules/05-conditional-types';
+import { declarationFiles } from './modules/06-declaration-files';
+import { backendPatterns } from './modules/07-backend-patterns';
+import { react } from './modules/08-react';
 
 /** Order here is the order on the picker, and the intended learning order. */
 export const MODULES: Module[] = [
   foundations,
   narrowing,
   generics,
-  {
-    id: 'utility-types',
-    title: 'Utility & Mapped Types',
-    blurb: 'Partial, Pick, Omit, Record — and how to write your own with a mapped type.',
-    status: 'planned',
-    exercises: [],
-  },
-  {
-    id: 'conditional-types',
-    title: 'Conditional & Template Literal Types',
-    blurb: 'infer, distributive conditionals, and building string types from other types.',
-    status: 'planned',
-    exercises: [],
-  },
-  {
-    id: 'project-setup',
-    title: 'Modules, Declaration Files & tsconfig',
-    blurb: 'Module resolution, path aliases, .d.ts files, and typing an untyped npm package.',
-    status: 'planned',
-    exercises: [],
-  },
-  {
-    id: 'backend-patterns',
-    title: 'Backend Patterns',
-    blurb: 'Handler signatures, runtime validation with zod, parsing env vars, Result types.',
-    status: 'planned',
-    exercises: [],
-  },
-  {
-    id: 'react',
-    title: 'Typing React',
-    blurb: 'Props, hooks, event handlers, generic components, discriminated-union props.',
-    status: 'planned',
-    exercises: [],
-  },
+  utilityTypes,
+  conditionalTypes,
+  declarationFiles,
+  backendPatterns,
+  react,
 ];
 
 export function findModule(id: string): Module | undefined {

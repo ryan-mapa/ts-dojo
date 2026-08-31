@@ -1,13 +1,16 @@
 import * as monaco from 'monaco-editor';
 import assertLib from './libs/assert.d.ts?raw';
 import nodeStubs from './libs/node-stubs.d.ts?raw';
+import reactStubs from './libs/react-stubs.d.ts?raw';
+import zodStubs from './libs/zod-stubs.d.ts?raw';
 import {
   SHARED_FLAGS,
-  EXERCISE_URI,
   CHECKS_URI,
   TARGET_ES2022,
   MODULE_ESNEXT,
   MODULE_RESOLUTION_BUNDLER,
+  JSX_PRESERVE,
+  exerciseUri,
 } from './compilerOptions';
 import { flattenMessage, type Diag } from './diagnostics';
 
@@ -38,6 +41,7 @@ export function configureTypeScript(): void {
     target: TARGET_ES2022 as monaco.typescript.ScriptTarget,
     module: MODULE_ESNEXT as monaco.typescript.ModuleKind,
     moduleResolution: MODULE_RESOLUTION_BUNDLER as monaco.typescript.ModuleResolutionKind,
+    jsx: JSX_PRESERVE as monaco.typescript.JsxEmit,
     allowNonTsExtensions: true,
   });
 
@@ -48,6 +52,8 @@ export function configureTypeScript(): void {
   ts.typescriptDefaults.setExtraLibs([
     { content: assertLib, filePath: 'file:///lib/assert.d.ts' },
     { content: nodeStubs, filePath: 'file:///lib/node-stubs.d.ts' },
+    { content: reactStubs, filePath: 'file:///lib/react-stubs.d.ts' },
+    { content: zodStubs, filePath: 'file:///lib/zod-stubs.d.ts' },
   ]);
 }
 
@@ -76,6 +82,17 @@ export function loadChecks(hiddenChecks: string): void {
   upsertModel(CHECKS_URI, hiddenChecks);
 }
 
+/** Drop the model for an exercise file we're no longer on, so a `.tsx` or
+ *  `.d.ts` exercise doesn't linger in the program and contribute stale errors
+ *  to the next exercise's grade. */
+export function disposeOtherExerciseModels(keep: string): void {
+  for (const model of monaco.editor.getModels()) {
+    const uri = model.uri.toString();
+    if (uri === CHECKS_URI || uri === keep) continue;
+    if (uri.startsWith('file:///exercise.')) model.dispose();
+  }
+}
+
 function toDiag(d: monaco.typescript.Diagnostic, model: monaco.editor.ITextModel): Diag {
   const pos = model.getPositionAt(d.start ?? 0);
   return {
@@ -94,16 +111,17 @@ function toDiag(d: monaco.typescript.Diagnostic, model: monaco.editor.ITextModel
  * error in checks.ts means "your type isn't what was asked for" and must stay
  * opaque, because its message spells out the expected type.
  */
-export async function grade(): Promise<GradeResult> {
+export async function grade(fileName?: string): Promise<GradeResult> {
+  const uri = exerciseUri(fileName);
   const worker = await ts.getTypeScriptWorker();
-  const exerciseModel = monaco.editor.getModel(monaco.Uri.parse(EXERCISE_URI));
-  if (!exerciseModel) throw new Error('grade() called before loadExercise()');
+  const exerciseModel = monaco.editor.getModel(monaco.Uri.parse(uri));
+  if (!exerciseModel) throw new Error('grade() called before the editor mounted');
 
-  const client = await worker(monaco.Uri.parse(EXERCISE_URI), monaco.Uri.parse(CHECKS_URI));
+  const client = await worker(monaco.Uri.parse(uri), monaco.Uri.parse(CHECKS_URI));
 
   const [syntactic, semantic, checkSemantic, checkSyntactic] = await Promise.all([
-    client.getSyntacticDiagnostics(EXERCISE_URI),
-    client.getSemanticDiagnostics(EXERCISE_URI),
+    client.getSyntacticDiagnostics(uri),
+    client.getSemanticDiagnostics(uri),
     client.getSemanticDiagnostics(CHECKS_URI),
     client.getSyntacticDiagnostics(CHECKS_URI),
   ]);

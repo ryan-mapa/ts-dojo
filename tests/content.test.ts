@@ -11,7 +11,7 @@ describe.each(ready)('$title', (module) => {
 
   describe.each(module.exercises)('$title', (ex) => {
     it('accepts the solution', () => {
-      const diags = checkExercise(ex.solution, ex.hiddenChecks);
+      const diags = checkExercise(ex.solution, ex.hiddenChecks, ex.fileName);
       expect(formatDiagnostics(diags)).toBe('');
     });
 
@@ -19,7 +19,7 @@ describe.each(ready)('$title', (module) => {
     // already satisfies the checks is worse than a missing exercise: it marks
     // itself complete the moment you open it, and you learn nothing.
     it('rejects the starter code', () => {
-      const diags = checkExercise(ex.starterCode, ex.hiddenChecks);
+      const diags = checkExercise(ex.starterCode, ex.hiddenChecks, ex.fileName);
       expect(diags.length).toBeGreaterThan(0);
     });
 
