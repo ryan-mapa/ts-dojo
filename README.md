@@ -106,6 +106,31 @@ fine anywhere.
 Everything through module 7 is backend Node — config objects, `fs/promises`, env
 vars, HTTP handler shapes. No JSX until module 8.
 
+## Lesson structure
+
+Each exercise has three parts:
+
+- **The concept** — the pre-read: what the feature is, why it exists, and worked
+  examples showing the wrong way beside the right one.
+- **Your task** — the instruction, kept short.
+- **Going deeper** — the post-read, revealed only once the exercise passes. Because
+  it comes after the answer it can discuss the solution directly and name the trap
+  you may have just hit, which a pre-read cannot do without spoiling the exercise.
+
+Examples in lesson text are **type-checked in CI** by fence tag, the same way the
+exercises themselves are:
+
+| fence | means |
+|---|---|
+| ```` ```ts ```` / ```` ```tsx ```` | must compile clean |
+| ```` ```ts-bad ```` / ```` ```tsx-bad ```` | must NOT compile — it is illustrating an error |
+| ```` ``` ```` | not checked |
+
+This has already caught two mislabelled examples and one place where a claim in
+the prose was true of real React but not of the stub the exercises run against.
+A teaching example that quietly stops being true misleads with the full
+authority of appearing in the lesson.
+
 ## Adding an exercise
 
 Add an object to the array in `src/content/modules/`. The whole shape:

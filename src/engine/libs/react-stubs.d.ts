@@ -2,8 +2,13 @@
 //
 // The real @types/react is enormous and models twenty years of API surface.
 // Exercises need props, children, hooks and events — so that is what this
-// declares. The signatures are faithful to the real ones for the subset covered;
-// where they are simplified, the simplification is noted.
+// declares. The signatures are faithful to the real ones for the subset covered.
+//
+// Note the event types are declared globally under React-prefixed names and
+// re-exported from 'react' below. They cannot be declared globally under their
+// own names because `MouseEvent` and `KeyboardEvent` already exist as DOM
+// globals with different shapes, and the JSX namespace (which is global) needs
+// to reference them.
 
 type ReactNode =
   | string
@@ -19,16 +24,52 @@ interface ReactElement {
   readonly props: unknown;
 }
 
+interface ReactSyntheticEvent<T = Element> {
+  currentTarget: T;
+  /** Whatever was actually clicked, which may be a descendant of currentTarget. */
+  target: T;
+  preventDefault(): void;
+  stopPropagation(): void;
+}
+
+interface ReactChangeEvent<T = Element> extends ReactSyntheticEvent<T> {
+  target: T & { value: string };
+}
+
+interface ReactMouseEvent<T = Element> extends ReactSyntheticEvent<T> {
+  clientX: number;
+  clientY: number;
+}
+
 // With `jsx: preserve` and no jsxImportSource, TypeScript checks JSX against
-// this global namespace. Intrinsic elements are loose on purpose: these
-// exercises are about typing *your* components, not about re-deriving the HTML
-// attribute surface.
+// this global namespace.
 declare namespace JSX {
   interface Element extends ReactElement {}
   interface ElementChildrenAttribute {
     children: object;
   }
   interface IntrinsicElements {
+    // A few elements carry real handler types, because contextual typing of
+    // inline event handlers is itself one of the lessons — with a loose
+    // `unknown` here, the callback parameter would be an implicit `any` and the
+    // lesson would be teaching the opposite of the truth.
+    input: {
+      value?: string;
+      type?: string;
+      onChange?: (event: ReactChangeEvent<HTMLInputElement>) => void;
+      [key: string]: unknown;
+    };
+    textarea: {
+      value?: string;
+      onChange?: (event: ReactChangeEvent<HTMLTextAreaElement>) => void;
+      [key: string]: unknown;
+    };
+    button: {
+      onClick?: (event: ReactMouseEvent<HTMLButtonElement>) => void;
+      [key: string]: unknown;
+    };
+    // Everything else stays loose: these exercises are about typing *your*
+    // components, not about re-deriving the HTML attribute surface.
     [elemName: string]: Record<string, unknown>;
   }
 }
@@ -57,18 +98,9 @@ declare module 'react' {
   export function useMemo<T>(factory: () => T, deps: readonly unknown[]): T;
   export function useRef<T>(initial: T): { current: T };
 
-  export interface SyntheticEvent<T = Element> {
-    currentTarget: T;
-    preventDefault(): void;
-    stopPropagation(): void;
-  }
-  export interface ChangeEvent<T = Element> extends SyntheticEvent<T> {
-    target: T & { value: string };
-  }
-  export interface MouseEvent<T = Element> extends SyntheticEvent<T> {
-    clientX: number;
-    clientY: number;
-  }
-  export type ChangeEventHandler<T = Element> = (event: ChangeEvent<T>) => void;
-  export type MouseEventHandler<T = Element> = (event: MouseEvent<T>) => void;
+  export type SyntheticEvent<T = Element> = ReactSyntheticEvent<T>;
+  export type ChangeEvent<T = Element> = ReactChangeEvent<T>;
+  export type MouseEvent<T = Element> = ReactMouseEvent<T>;
+  export type ChangeEventHandler<T = Element> = (event: ReactChangeEvent<T>) => void;
+  export type MouseEventHandler<T = Element> = (event: ReactMouseEvent<T>) => void;
 }
