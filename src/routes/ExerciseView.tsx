@@ -75,13 +75,6 @@ export function ExerciseView() {
             onRevealSolution={() => setRevealSignal((n) => n + 1)}
           />
 
-          {exercise.debrief && completed[key] && (
-            <section className="reading debrief">
-              <h2 className="section-label">Going deeper</h2>
-              <Markdown markdown={exercise.debrief} />
-            </section>
-          )}
-
           <div className="exercise-nav">
             {mod.exercises.map((e, i) => (
               <Link
@@ -107,6 +100,17 @@ export function ExerciseView() {
           revealSignal={revealSignal}
         />
       </div>
+
+      {/* Full width, below both columns. The debrief only exists once the
+          exercise is solved, at which point the editor has stopped being the
+          thing you are looking at — and long-form prose needs a wider measure
+          than the 480px working column gives it. */}
+      {exercise.debrief && completed[key] && (
+        <section className="reading debrief-band">
+          <h2 className="section-label">Going deeper</h2>
+          <Markdown markdown={exercise.debrief} />
+        </section>
+      )}
 
       {completed[key] && next && (
         <button className="primary next" onClick={() => navigate(`/module/${moduleId}/${next.id}`)}>

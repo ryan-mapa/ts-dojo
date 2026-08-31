@@ -68,8 +68,16 @@ button.link { background: none; border: 0; color: var(--accent); padding: 0; tex
   padding-bottom: 8px; border-bottom: 1px solid var(--line);
 }
 .reading.task .section-label { color: var(--accent); border-bottom-color: #1e3a47; }
-.reading.debrief { border-left: 2px solid #21402f; padding-left: 16px; margin-top: 28px; }
-.reading.debrief .section-label { color: var(--pass); border-bottom-color: #21402f; }
+.debrief-band {
+  margin: 30px 0 0; padding: 26px 34px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-left: 3px solid var(--pass); border-radius: 12px;
+  max-width: 78ch;
+}
+.debrief-band .section-label { color: var(--pass); border-bottom-color: #21402f; }
+/* Slightly more generous than the working column: this is read, not scanned. */
+.debrief-band .prose p { font-size: 15px; line-height: 1.72; margin-bottom: 15px; }
+.debrief-band pre.example { font-size: 13px; padding: 15px 16px; margin-bottom: 16px; }
 
 .prose p { margin: 0 0 13px; font-size: 14.5px; color: #c3cad6; }
 .prose p:last-child { margin-bottom: 0; }
