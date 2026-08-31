@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findModule } from '../content';
 import { Markdown } from '../components/Markdown';
+import { Logo } from '../components/Logo';
 import { HintStack } from '../components/HintStack';
 import { ExerciseEditor } from '../components/ExerciseEditor';
 import { useProgress, keyOf } from '../store/progress';
@@ -46,8 +47,10 @@ export function ExerciseView() {
   return (
     <main className="exercise">
       <nav className="crumbs">
-        <Link to="/">All modules</Link>
-        <span>/</span>
+        <Link to="/" aria-label="ts-dojo — back to all modules">
+          <Logo compact />
+        </Link>
+        <span className="sep">/</span>
         <span>{mod.title}</span>
       </nav>
 

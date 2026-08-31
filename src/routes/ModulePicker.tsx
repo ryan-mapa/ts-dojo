@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MODULES } from '../content';
 import { Inline } from '../components/Markdown';
+import { Logo } from '../components/Logo';
 import { useProgress, keyOf } from '../store/progress';
 
 export function ModulePicker() {
@@ -13,7 +14,9 @@ export function ModulePicker() {
   return (
     <main className="picker">
       <header className="masthead">
-        <h1>ts&#8209;dojo</h1>
+        <h1>
+          <Logo />
+        </h1>
         <p className="tagline">
           Learn TypeScript by arguing with the compiler, not by reading about it. Every exercise is graded
           by a real type&nbsp;checker.
