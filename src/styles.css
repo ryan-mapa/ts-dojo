@@ -42,6 +42,16 @@ button.link { background: none; border: 0; color: var(--accent); padding: 0; tex
   font-family: var(--mono); font-weight: 700; font-size: 0.78em;
   background: var(--accent); color: #06121a;
   border-radius: 0.2em; padding: 0.16em 0.26em 0.2em;
+  /* Baseline alignment lines up the `ts` INSIDE the tile with the baseline of
+     `dojo`, which leaves the tile's padding and font descent — measured at
+     12.3px on a 42px logo — hanging below the line, so the chip visibly sags.
+     Raising it by that distance (0.375 x the tile's own font-size, so it holds
+     at every logo size) puts the tile's bottom edge on the baseline instead:
+     the chip sits on the same line the letters sit on.
+     The matching negative margin keeps the layout box in step with the visual
+     one, since a transform alone would leave a dead 12px under the logo. */
+  transform: translateY(-0.375em);
+  margin-bottom: -0.375em;
 }
 .logo-word { color: var(--ink); }
 .logo.compact { font-size: 17px; gap: 0.24em; }
