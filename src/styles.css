@@ -34,29 +34,25 @@ button.link { background: none; border: 0; color: var(--accent); padding: 0; tex
 
 /* ---------- logo ---------- */
 .logo {
-  display: inline-flex; align-items: baseline; gap: 0.26em;
+  /* Baseline alignment puts the `ts` glyphs on the same baseline as `dojo`, so
+     the bottom of the `s` sits level with the bottom of the `d` and `o`. The
+     tile's own bottom edge then falls a little below that line, which is what
+     you want once the tile is snug: the letters read as one word. */
+  display: inline-flex; align-items: baseline; gap: 0.24em;
   font-weight: 700; letter-spacing: -0.02em; line-height: 1;
   font-size: 42px;
 }
 .logo-tile {
-  font-family: var(--mono); font-weight: 700; font-size: 0.78em;
+  font-family: var(--mono); font-weight: 700;
+  /* Larger than before, which also lets the tile hug the letters instead of
+     framing them in a field of blue. */
+  font-size: 0.95em;
   background: var(--accent); color: #06121a;
-  border-radius: 0.2em;
-  /* Asymmetric on purpose. Equal padding does NOT optically centre the glyphs,
-     because the font's ascent and descent are not symmetric about the letters:
-     with 0.16/0.2 there was 9.2px of blue above the letters and 11.8px below.
-     Measured, not guessed. */
-  padding: 0.2em 0.26em 0.16em;
-  /* Baseline alignment lines up the `ts` INSIDE the tile with the baseline of
-     `dojo`, which leaves the tile's padding and font descent — measured at
-     12.3px on a 42px logo — hanging below the line, so the chip visibly sags.
-     Raising it by that distance (0.375 x the tile's own font-size, so it holds
-     at every logo size) puts the tile's bottom edge on the baseline instead:
-     the chip sits on the same line the letters sit on.
-     The matching negative margin keeps the layout box in step with the visual
-     one, since a transform alone would leave a dead 12px under the logo. */
-  transform: translateY(-0.335em);
-  margin-bottom: -0.335em;
+  border-radius: 0.18em;
+  /* Asymmetric on purpose: a font's ascent and descent are not symmetric about
+     the glyphs, so equal padding does not optically centre them. These values
+     are measured, not guessed — see the note on alignment below. */
+  padding: 0.1em 0.2em 0.06em;
 }
 .logo-word { color: var(--ink); }
 .logo.compact { font-size: 17px; gap: 0.24em; }
@@ -162,16 +158,14 @@ pre.example.bad { border-color: #3a2427; background: #15100f; }
 /* Rendered only on touch — see src/lib/touch.ts. Sits ABOVE the editor on
    purpose: with the virtual keyboard up, the bottom half of the viewport is
    gone, so a bar below the code would be the first thing covered. */
-.keybar { display: flex; gap: 8px; align-items: center; margin-bottom: -4px; }
-.keybar-group { display: flex; gap: 5px; }
-.keybar-group.scroll {
-  overflow-x: auto; flex: 1; padding-bottom: 2px;
-  scrollbar-width: none; -webkit-overflow-scrolling: touch;
-}
-.keybar-group.scroll::-webkit-scrollbar { display: none; }
-.keybar button {
-  flex: none;
-  min-width: 38px; height: 40px; padding: 0 9px;
+.keybar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 2px; }
+.keybar-row { display: flex; gap: 5px; }
+/* Every key shares the row equally and shrinks to fit, so the bar can never
+   overflow no matter how many keys a row holds. The cursor row has fewer keys,
+   which conveniently makes the precision-critical ones the biggest targets. */
+.keybar-row button {
+  flex: 1 1 0; min-width: 0;
+  height: 40px; padding: 0 4px;
   background: var(--panel); border: 1px solid var(--line); color: var(--ink);
   font-family: var(--mono); font-size: 15px; line-height: 1;
   border-radius: 8px;

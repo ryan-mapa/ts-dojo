@@ -71,8 +71,8 @@ export function formatDiagnostics(diags: ts.Diagnostic[]): string {
  * checks attached. Used to verify that the examples we teach with actually say
  * what we claim they do.
  */
-export function checkSnippet(code: string): ts.Diagnostic[] {
-  return checkExercise(code, '', 'snippet.ts');
+export function checkSnippet(code: string, jsx = false): ts.Diagnostic[] {
+  return checkExercise(code, '', jsx ? 'snippet.tsx' : 'snippet.ts');
 }
 
 export interface Fence {

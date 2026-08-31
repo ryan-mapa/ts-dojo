@@ -16,7 +16,20 @@ import type { editor } from 'monaco-editor';
  * Shown only on coarse pointers — see the media query in styles.css.
  */
 
-const SYMBOLS = [':', ';', '<', '>', '|', '?', '{', '}', '(', ')', '[', ']', "'", '=>', ',', '.'];
+/**
+ * Chosen by how buried each character is on a phone keyboard, not by raw
+ * frequency. On iOS `< > { } [ ] | =` sit two layers deep, so they cost three
+ * taps each; `; ( ) ' " ?` are one layer down, and `.` and `,` are on the
+ * primary layer. So the deep ones earn their place here and the shallow ones
+ * mostly do not, whatever their frequency.
+ *
+ * Dropped for that reason: `; ( ) , . '`. Also dropped are the closing `} ] )`,
+ * since auto-closing brackets already insert them.
+ *
+ * `:` is the one exception — one layer down, but it opens nearly every
+ * annotation in the curriculum.
+ */
+const SYMBOLS = [':', '=', '=>', '<', '>', '|', '?', '{', '['];
 
 type Move = 'left' | 'right' | 'up' | 'down' | 'home' | 'end';
 
@@ -97,9 +110,12 @@ export function KeyBar({ editorRef }: { editorRef: { current: editor.IStandalone
   // the page reflows under you on every single tap.
   const keepFocus = (e: PointerEvent) => e.preventDefault();
 
+  // Two fixed rows rather than one scrolling one. A horizontally scrolling
+  // toolbar hides half its own contents and competes with the page for touch
+  // gestures; every key being visible is worth trimming the set for.
   return (
     <div className="keybar" role="toolbar" aria-label="Editor cursor and symbol keys">
-      <div className="keybar-group">
+      <div className="keybar-row">
         {KEYS.map(([dir, glyph, label]) => (
           <button key={dir} onPointerDown={keepFocus} onClick={() => move(dir)} aria-label={label}>
             {glyph}
@@ -107,7 +123,7 @@ export function KeyBar({ editorRef }: { editorRef: { current: editor.IStandalone
         ))}
       </div>
 
-      <div className="keybar-group scroll">
+      <div className="keybar-row">
         <button onPointerDown={keepFocus} onClick={() => insert('  ')} aria-label="Indent">
           tab
         </button>

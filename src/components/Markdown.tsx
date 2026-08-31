@@ -90,7 +90,7 @@ export function Markdown({ markdown }: { markdown: string }) {
 
   for (const match of markdown.matchAll(FENCE)) {
     pushProse(markdown.slice(cursor, match.index));
-    blocks.push(<CodeBlock key={key++} code={(match[2] ?? '').trimEnd()} bad={match[1] === 'ts-bad'} />);
+    blocks.push(<CodeBlock key={key++} code={(match[2] ?? '').trimEnd()} bad={(match[1] ?? '').endsWith('-bad')} />);
     cursor = (match.index ?? 0) + match[0].length;
   }
   pushProse(markdown.slice(cursor));

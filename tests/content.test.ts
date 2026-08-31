@@ -32,12 +32,12 @@ describe.each(ready)('$title', (module) => {
     // silently stopped being true would teach the wrong thing with the full
     // authority of appearing in the lesson.
     const blocks = [...fences(ex.concept ?? ''), ...fences(ex.debrief ?? '')];
-    const checked = blocks.filter((b) => b.lang === 'ts' || b.lang === 'ts-bad');
+    const checked = blocks.filter((b) => /^tsx?(-bad)?$/.test(b.lang));
 
     checked.forEach((block, i) => {
       it(`example ${i + 1} (${block.lang}) says what it claims`, () => {
-        const diags = checkSnippet(block.code);
-        if (block.lang === 'ts') {
+        const diags = checkSnippet(block.code, block.lang.startsWith('tsx'));
+        if (!block.lang.endsWith('-bad')) {
           expect(formatDiagnostics(diags)).toBe('');
         } else {
           expect(diags.length).toBeGreaterThan(0);
