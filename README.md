@@ -1,9 +1,14 @@
 # ts-dojo
 
+**[Open the app →](https://ryan-mapa.github.io/ts-dojo/)**
+
 An interactive TypeScript trainer. You write TypeScript in a real editor, and a
 real type checker decides whether you got it right.
 
 No accounts, no server, no database. Pick a module and start.
+
+54 exercises across 8 modules, from annotations through conditional types to
+React — each one graded by a real compiler running in the browser.
 
 ## Why it works this way
 
