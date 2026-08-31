@@ -1,0 +1,35 @@
+import { describe, it, expect } from 'vitest';
+import { MODULES } from '../src/content';
+import { checkExercise, formatDiagnostics } from './tsCheck';
+
+const ready = MODULES.filter((m) => m.status === 'ready');
+
+describe.each(ready)('$title', (module) => {
+  it('is marked ready, so it must have exercises', () => {
+    expect(module.exercises.length).toBeGreaterThan(0);
+  });
+
+  describe.each(module.exercises)('$title', (ex) => {
+    it('accepts the solution', () => {
+      const diags = checkExercise(ex.solution, ex.hiddenChecks);
+      expect(formatDiagnostics(diags)).toBe('');
+    });
+
+    // The assertion that actually earns its keep. An exercise whose starter code
+    // already satisfies the checks is worse than a missing exercise: it marks
+    // itself complete the moment you open it, and you learn nothing.
+    it('rejects the starter code', () => {
+      const diags = checkExercise(ex.starterCode, ex.hiddenChecks);
+      expect(diags.length).toBeGreaterThan(0);
+    });
+
+    it('has hints that build toward the answer', () => {
+      expect(ex.hints.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+});
+
+it('has no duplicate exercise ids', () => {
+  const ids = MODULES.flatMap((m) => m.exercises.map((e) => `${m.id}/${e.id}`));
+  expect(new Set(ids).size).toBe(ids.length);
+});
