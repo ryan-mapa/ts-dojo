@@ -24,6 +24,11 @@ function renderInline(text: string): ReactNode[] {
   });
 }
 
+/** The same inline formatting, for one-line text like module blurbs. */
+export function Inline({ text }: { text: string }) {
+  return <>{renderInline(text)}</>;
+}
+
 export function Brief({ markdown }: { markdown: string }) {
   const paragraphs = markdown.split(/\n\s*\n/);
   return (

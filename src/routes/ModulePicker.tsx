@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MODULES } from '../content';
+import { Inline } from '../components/Brief';
 import { useProgress, keyOf } from '../store/progress';
 
 export function ModulePicker() {
@@ -40,7 +41,9 @@ export function ModulePicker() {
             <li key={m.id} className={ready ? 'module-card' : 'module-card planned'}>
               <span className="module-index">{String(i + 1).padStart(2, '0')}</span>
               <h2>{ready ? <Link to={`/module/${m.id}`}>{m.title}</Link> : m.title}</h2>
-              <p>{m.blurb}</p>
+              <p>
+                <Inline text={m.blurb} />
+              </p>
               <p className="module-meta">
                 {ready ? `${done} / ${m.exercises.length} solved` : 'Not written yet'}
               </p>
