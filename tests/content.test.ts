@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { MODULES } from '../src/content';
-import { checkExercise, formatDiagnostics } from './tsCheck';
+import { checkExercise, checkSnippet, fences, formatDiagnostics } from './tsCheck';
 
 const ready = MODULES.filter((m) => m.status === 'ready');
 
@@ -25,6 +25,24 @@ describe.each(ready)('$title', (module) => {
 
     it('has hints that build toward the answer', () => {
       expect(ex.hints.length).toBeGreaterThanOrEqual(2);
+    });
+
+    // Teaching examples are held to the same standard as the exercises: a
+    // ```ts block must compile, and a ```ts-bad block must not. An example that
+    // silently stopped being true would teach the wrong thing with the full
+    // authority of appearing in the lesson.
+    const blocks = [...fences(ex.concept ?? ''), ...fences(ex.debrief ?? '')];
+    const checked = blocks.filter((b) => b.lang === 'ts' || b.lang === 'ts-bad');
+
+    checked.forEach((block, i) => {
+      it(`example ${i + 1} (${block.lang}) says what it claims`, () => {
+        const diags = checkSnippet(block.code);
+        if (block.lang === 'ts') {
+          expect(formatDiagnostics(diags)).toBe('');
+        } else {
+          expect(diags.length).toBeGreaterThan(0);
+        }
+      });
     });
   });
 });

@@ -18,4 +18,9 @@ self.MonacoEnvironment = {
 
 loader.config({ monaco });
 
+// Set globally, not just on the editor: `monaco.editor.colorize` (used for the
+// examples in lesson text) reads the active theme, and lesson text can render
+// before any editor has mounted.
+monaco.editor.setTheme('vs-dark');
+
 export { monaco };

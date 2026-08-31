@@ -1,8 +1,21 @@
 export interface Exercise {
   id: string;
   title: string;
-  /** Markdown. The concept, then the concrete task. */
+  /**
+   * Pre-read. The concept itself: what the feature is, why it exists, and a
+   * worked example. Optional so an exercise can be added without one, but every
+   * exercise in a `ready` module should have it.
+   */
+  concept?: string;
+  /** Markdown. The task — what to actually change, kept short. */
   brief: string;
+  /**
+   * Post-read, revealed only once the exercise passes. Because it comes after
+   * the answer it can name the trap you may have just hit, discuss the solution
+   * directly, and point at where this shows up in real code — none of which it
+   * could do beforehand without spoiling the exercise.
+   */
+  debrief?: string;
   /**
    * Defaults to `exercise.ts`. Use `exercise.tsx` for JSX, or `exercise.d.ts`
    * for declaration-file exercises — a `.d.ts` with no imports or exports is a

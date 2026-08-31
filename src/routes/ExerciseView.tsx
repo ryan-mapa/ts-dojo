@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findModule } from '../content';
-import { Brief } from '../components/Brief';
+import { Markdown } from '../components/Markdown';
 import { HintStack } from '../components/HintStack';
 import { ExerciseEditor } from '../components/ExerciseEditor';
 import { useProgress, keyOf } from '../store/progress';
@@ -58,12 +58,29 @@ export function ExerciseView() {
             {completed[key] && <span className="badge">solved</span>}
           </p>
           <h1>{exercise.title}</h1>
-          <Brief markdown={exercise.brief} />
+          {exercise.concept && (
+            <section className="reading">
+              <h2 className="section-label">The concept</h2>
+              <Markdown markdown={exercise.concept} />
+            </section>
+          )}
+
+          <section className="reading task">
+            <h2 className="section-label">Your task</h2>
+            <Markdown markdown={exercise.brief} />
+          </section>
           <HintStack
             key={exercise.id}
             hints={exercise.hints}
             onRevealSolution={() => setRevealSignal((n) => n + 1)}
           />
+
+          {exercise.debrief && completed[key] && (
+            <section className="reading debrief">
+              <h2 className="section-label">Going deeper</h2>
+              <Markdown markdown={exercise.debrief} />
+            </section>
+          )}
 
           <div className="exercise-nav">
             {mod.exercises.map((e, i) => (

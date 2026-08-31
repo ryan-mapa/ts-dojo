@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MODULES } from '../content';
-import { Inline } from '../components/Brief';
+import { Inline } from '../components/Markdown';
 import { useProgress, keyOf } from '../store/progress';
 
 export function ModulePicker() {

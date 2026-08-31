@@ -65,3 +65,26 @@ export function formatDiagnostics(diags: ts.Diagnostic[]): string {
     .map((d) => `${d.file?.fileName ?? '?'}: ${ts.flattenDiagnosticMessageText(d.messageText, ' ')}`)
     .join('\n');
 }
+
+/**
+ * Type-check a standalone snippet from a `concept` or `debrief`, with no hidden
+ * checks attached. Used to verify that the examples we teach with actually say
+ * what we claim they do.
+ */
+export function checkSnippet(code: string): ts.Diagnostic[] {
+  return checkExercise(code, '', 'snippet.ts');
+}
+
+export interface Fence {
+  lang: string;
+  code: string;
+}
+
+/** Pull fenced blocks out of authored markdown, tag and all. */
+export function fences(markdown: string): Fence[] {
+  const out: Fence[] = [];
+  for (const m of markdown.matchAll(/```(\w[\w-]*)?\n([\s\S]*?)```/g)) {
+    out.push({ lang: m[1] ?? '', code: (m[2] ?? '').trimEnd() });
+  }
+  return out;
+}

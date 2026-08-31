@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Inline } from './Markdown';
 
 /**
  * Hints reveal one at a time, cheapest first. Revealing them one by one rather
@@ -12,7 +13,7 @@ export function HintStack({ hints, onRevealSolution }: { hints: string[]; onReve
     <div className="hints">
       {hints.slice(0, shown).map((h, i) => (
         <p key={i} className="hint">
-          <span className="hint-index">Hint {i + 1}</span> {h}
+          <span className="hint-index">Hint {i + 1}</span> <Inline text={h} />
         </p>
       ))}
       {shown < hints.length ? (
