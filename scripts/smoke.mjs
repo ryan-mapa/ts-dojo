@@ -74,6 +74,13 @@ try {
   check('survives a reload', await page.locator('.badge').isVisible());
 
   if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT, fullPage: true });
+} catch (err) {
+  // Without this, any thrown error (a selector that never appears, a navigation
+  // timeout) would skip straight to `finally` and report SMOKE PASSED, because
+  // `failed` was never set. A smoke test that passes when it crashed is worse
+  // than no smoke test.
+  console.log(`\n  threw: ${err instanceof Error ? err.message.split('\n')[0] : String(err)}`);
+  failed = true;
 } finally {
   const real = errors.filter((e) => !/favicon|ResizeObserver/i.test(e));
   if (real.length) {
