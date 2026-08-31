@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import { findModule } from '../content';
+import { findModule, moduleNumber } from '../content';
 import { Markdown } from '../components/Markdown';
 import { Logo } from '../components/Logo';
 import { HintStack } from '../components/HintStack';
@@ -57,7 +57,8 @@ export function ExerciseView() {
       <div className="exercise-body">
         <section className="panel">
           <p className="eyebrow">
-            Exercise {index + 1} of {mod.exercises.length}
+            Module {moduleNumber(moduleId)} <span className="sep">·</span> Exercise {index + 1} of{' '}
+            {mod.exercises.length}
             {completed[key] && <span className="badge">solved</span>}
           </p>
           <h1>{exercise.title}</h1>

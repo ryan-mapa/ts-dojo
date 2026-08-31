@@ -71,7 +71,15 @@ a:hover .logo-word { color: var(--accent); }
 .module-card h2 a { text-decoration: none; }
 .module-card h2 a:hover { text-decoration: underline; }
 .module-card p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
-.module-index { font-family: var(--mono); font-size: 12px; color: var(--line); position: absolute; top: 18px; right: 20px; }
+/* Was a near-invisible digit in the corner. The order modules are meant to be
+   worked through is load-bearing information, so it reads as a label now,
+   matching the eyebrow on the exercise page. */
+.module-number {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.09em;
+  margin: 0 0 8px;
+}
+.module-card.planned .module-number { color: var(--line); }
 .module-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 .module-card.planned { opacity: 0.45; }
 
@@ -103,6 +111,7 @@ a:hover .logo-word { color: var(--accent); }
 
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 26px; }
 .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+.eyebrow .sep { color: var(--line); margin: 0 2px; }
 .badge { color: var(--pass); margin-left: 10px; }
 .panel h1 { font-size: 22px; margin: 0 0 20px; letter-spacing: -0.01em; }
 

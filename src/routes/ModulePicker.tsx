@@ -42,7 +42,7 @@ export function ModulePicker() {
           const ready = m.status === 'ready';
           return (
             <li key={m.id} className={ready ? 'module-card' : 'module-card planned'}>
-              <span className="module-index">{String(i + 1).padStart(2, '0')}</span>
+              <p className="module-number">Module {String(i + 1).padStart(2, '0')}</p>
               <h2>{ready ? <Link to={`/module/${m.id}`}>{m.title}</Link> : m.title}</h2>
               <p>
                 <Inline text={m.blurb} />
