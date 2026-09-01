@@ -86,13 +86,12 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
             // type was there to make the tap target for placing a cursor
             // bigger — but the key bar's arrows do that job now, and the real
             // constraint on a 390px screen is how much of a line you can see.
-            fontSize: COARSE_POINTER ? 13 : 14,
-            lineHeight: COARSE_POINTER ? 21 : 0,
-            // Wrap rather than scroll sideways. Horizontal scrolling inside a
-            // vertically scrolling page is miserable on touch, and code you
-            // cannot see is worse than code on two lines.
-            wordWrap: COARSE_POINTER ? 'on' : 'off',
-            wrappingIndent: 'indent',
+            fontSize: COARSE_POINTER ? 12 : 14,
+            lineHeight: COARSE_POINTER ? 19 : 0,
+            // No wrapping. Wrapped lines break the one-line-per-statement shape
+            // that makes code scannable, and at 12px enough of a line fits that
+            // the occasional sideways scroll is the better trade.
+            wordWrap: 'off',
             // The gutter measured 74px on an iPhone — 21% of the editor — for
             // exercises that are never more than ~20 lines long. Two digits of
             // line number is plenty; the folding column and the decoration

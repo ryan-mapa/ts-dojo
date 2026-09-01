@@ -77,6 +77,18 @@ const h = await p.locator('.keybar button').first().boundingBox();
 ok(`tap targets >= 40px tall (${Math.round(h.height)}px)`, h.height >= 40);
 ok('hover cards disabled on touch', await p.evaluate(() => !document.querySelector('.monaco-hover')));
 
+// iOS Safari zooms the page on focusing any input under 16px, which strands the
+// layout. Monaco's focusable textareas are invisible, so this is unnoticeable in
+// a screenshot and only shows up on a real device — worth pinning. Monaco has
+// already renamed this element once (inputarea -> ime-text-area).
+const inputSizes = await p.evaluate(() =>
+  [...document.querySelectorAll('.monaco-editor textarea')].map((t) => ({
+    cls: t.className,
+    px: parseFloat(getComputedStyle(t).fontSize),
+  })));
+console.log('  focusable inputs:', JSON.stringify(inputSizes));
+ok('no input under 16px (would trigger iOS zoom)', inputSizes.length > 0 && inputSizes.every((i) => i.px >= 16));
+
 await p.screenshot({ path: process.env.SHOT });
 await ctx.close(); await b.close();
 console.log(bad ? '\nMOBILE CHECK FAILED' : '\nMOBILE CHECK PASSED');

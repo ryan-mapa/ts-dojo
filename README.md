@@ -85,9 +85,19 @@ the platform's touch aids — the iOS magnifier, the selection handles — are
 available, and placing a caret means hitting a target a few pixels wide. On
 touch the editor therefore gets an accessory key bar: arrow keys to step the
 cursor exactly, plus the characters that live two keyboard layers deep on a
-phone (`<`, `>`, `{`, `|`, `=>`). Type is larger, the caret is fatter, and hover
-cards, the context menu and the suggest widget are turned off — all three fight
-touch or blot out a small screen.
+phone (`<`, `>`, `{`, `|`, `=>`). Type is *smaller* — 12px — because the key bar
+handles cursor precision, so the binding constraint becomes how much of a line
+fits on a 390px screen. The gutter is trimmed to about 20px for the same reason:
+two digits of line number, no folding column, glyph margin or overview ruler.
+Hover cards, the context menu and the suggest widget are off, since all three
+fight touch or blot out a small screen.
+
+One non-obvious rule in `styles.css`: every `textarea` inside the editor is
+pinned to 16px. Monaco's input is invisible, but iOS Safari zooms the page
+whenever a focused input is under 16px, which strands the layout — so the
+rendered font and the input font are deliberately unrelated. `npm run mobile`
+asserts it, because the bug is invisible in a screenshot and Monaco has already
+renamed that element once.
 
 Detection lives in `src/lib/touch.ts` and deliberately corroborates
 `(pointer: coarse)` with other signals: Chrome applies touch emulation

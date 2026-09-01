@@ -173,6 +173,20 @@ pre.example.bad { border-color: #3a2427; background: #15100f; }
 /* Rendered only on touch — see src/lib/touch.ts. Sits ABOVE the editor on
    purpose: with the virtual keyboard up, the bottom half of the viewport is
    gone, so a bar below the code would be the first thing covered. */
+/* iOS Safari zooms the page whenever you focus an input whose font-size is
+   under 16px, and Monaco's hidden input inherits the editor's size — so tapping
+   into the code zoomed in and left the layout stranded.
+   The textarea is invisible (transparent, sized to the caret), so giving it a
+   16px font changes nothing on screen and removes the trigger. This must stay
+   at 16px even if the editor's rendered font shrinks further; the two are
+   deliberately unrelated. */
+/* Targets the element by tag rather than class on purpose: monaco 0.56 calls it
+   `ime-text-area` (older versions used `inputarea`) and ships a second focusable
+   `iPadShowKeyboard` textarea. Both can take focus, so both need the rule. */
+.monaco-editor textarea {
+  font-size: 16px !important;
+}
+
 .keybar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 2px; }
 .keybar-row { display: flex; gap: 5px; }
 /* Every key shares the row equally and shrinks to fit, so the bar can never
