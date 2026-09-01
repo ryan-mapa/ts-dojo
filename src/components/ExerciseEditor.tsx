@@ -82,10 +82,33 @@ export function ExerciseEditor({ exercise, initialCode, onCodeChange, onPass, re
           onChange={(v) => onCodeChange(v ?? '')}
           options={{
             minimap: { enabled: false },
-            // Bigger type and looser lines on touch: the tap target for placing
-            // a cursor is one character cell, so its size is the whole game.
-            fontSize: COARSE_POINTER ? 16 : 14,
-            lineHeight: COARSE_POINTER ? 28 : 0,
+            // Smaller on touch, which is the opposite of the obvious call. Big
+            // type was there to make the tap target for placing a cursor
+            // bigger — but the key bar's arrows do that job now, and the real
+            // constraint on a 390px screen is how much of a line you can see.
+            fontSize: COARSE_POINTER ? 13 : 14,
+            lineHeight: COARSE_POINTER ? 21 : 0,
+            // Wrap rather than scroll sideways. Horizontal scrolling inside a
+            // vertically scrolling page is miserable on touch, and code you
+            // cannot see is worse than code on two lines.
+            wordWrap: COARSE_POINTER ? 'on' : 'off',
+            wrappingIndent: 'indent',
+            // The gutter measured 74px on an iPhone — 21% of the editor — for
+            // exercises that are never more than ~20 lines long. Two digits of
+            // line number is plenty; the folding column and the decoration
+            // margin are pure loss at this width.
+            lineNumbersMinChars: COARSE_POINTER ? 2 : 3,
+            // Not 0: that leaves the line number touching the code. A few pixels
+            // buys the separation back and still costs almost nothing.
+            lineDecorationsWidth: COARSE_POINTER ? 6 : 10,
+            folding: !COARSE_POINTER,
+            glyphMargin: false,
+            overviewRulerLanes: COARSE_POINTER ? 0 : 2,
+            overviewRulerBorder: !COARSE_POINTER,
+            scrollbar: {
+              verticalScrollbarSize: COARSE_POINTER ? 6 : 12,
+              horizontalScrollbarSize: COARSE_POINTER ? 6 : 12,
+            },
             scrollBeyondLastLine: false,
             tabSize: 2,
             renderLineHighlight: 'none',
