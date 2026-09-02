@@ -5,7 +5,7 @@ import { Markdown } from '../components/Markdown';
 import { Logo } from '../components/Logo';
 import { HintStack } from '../components/HintStack';
 import { ExerciseEditor } from '../components/ExerciseEditor';
-import { useProgress, keyOf } from '../store/progress';
+import { useProgress, keyOf, resumeExerciseId } from '../store/progress';
 
 export function ExerciseView() {
   const { moduleId = '', exerciseId } = useParams();
@@ -38,8 +38,12 @@ export function ExerciseView() {
 
   if (!mod) return <Navigate to="/" replace />;
   if (!exercise) {
-    const first = mod.exercises[0];
-    return first ? <Navigate to={`/module/${moduleId}/${first.id}`} replace /> : <Navigate to="/" replace />;
+    const resume = resumeExerciseId(mod, completed);
+    return resume ? (
+      <Navigate to={`/module/${moduleId}/${resume}`} replace />
+    ) : (
+      <Navigate to="/" replace />
+    );
   }
 
   const next = mod.exercises[index + 1];

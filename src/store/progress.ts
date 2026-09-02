@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { Module } from '../content/types';
 
 type Key = string; // `${moduleId}/${exerciseId}`
 
@@ -26,3 +27,16 @@ export const useProgress = create<ProgressState>()(
 );
 
 export const keyOf = (moduleId: string, exerciseId: string): Key => `${moduleId}/${exerciseId}`;
+
+/**
+ * Which exercise a module should open on when the URL names no specific one:
+ * the first still unsolved, so re-entering a half-finished module drops you
+ * where you left off rather than back at exercise 1.
+ *
+ * A fully solved module reopens at its first exercise — there is no unsolved
+ * one left to pick, and the top is the natural place to review from.
+ */
+export function resumeExerciseId(mod: Module, completed: Record<Key, true>): string | undefined {
+  const unsolved = mod.exercises.find((e) => !completed[keyOf(mod.id, e.id)]);
+  return (unsolved ?? mod.exercises[0])?.id;
+}
