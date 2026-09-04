@@ -3,6 +3,8 @@ import { MODULES } from '../content';
 import { Inline } from '../components/Markdown';
 import { Logo } from '../components/Logo';
 import { useProgress, keyOf } from '../store/progress';
+import { ShareButton } from '../components/ShareButton';
+import { REPO_URL } from '../lib/links';
 
 export function ModulePicker() {
   const completed = useProgress((s) => s.completed);
@@ -56,9 +58,11 @@ export function ModulePicker() {
       </ul>
 
       <footer className="site-footer">
-        <a href="https://github.com/ryan-mapa/ts-dojo" target="_blank" rel="noopener noreferrer">
+        <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
           Source on GitHub
         </a>
+        <span className="sep">·</span>
+        <ShareButton />
       </footer>
     </main>
   );

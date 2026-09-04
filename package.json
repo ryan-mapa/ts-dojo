@@ -12,6 +12,7 @@
     "typecheck": "tsc -b --noEmit",
     "smoke": "node scripts/smoke.mjs",
     "mobile": "node scripts/mobile-check.mjs",
+    "share-check": "node scripts/share-check.mjs",
     "verify-deploy": "bash scripts/verify-deploy.sh"
   },
   "dependencies": {

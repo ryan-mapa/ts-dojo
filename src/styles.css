@@ -89,6 +89,11 @@ a:hover .logo-word { color: var(--accent); }
   font-size: 13px; color: var(--muted);
 }
 
+/* The status text sits beside the button rather than replacing its label, so
+   confirming a copy never reflows the footer or moves the thing you just hit. */
+.share { display: inline-flex; align-items: center; gap: 8px; }
+.share-status { color: var(--muted); font-size: 12px; }
+
 /* ---------- exercise ---------- */
 .exercise { max-width: 1560px; margin: 0 auto; padding: 20px 24px 40px; }
 .crumbs { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); margin-bottom: 18px; }

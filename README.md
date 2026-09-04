@@ -57,6 +57,7 @@ npm test           # engine + every exercise (see below)
 npm run build      # production bundle
 npm run smoke      # end-to-end browser check; needs `npm run dev` running
 npm run mobile     # touch-layout check under iPhone emulation
+npm run share-check # share button's API fallback chain; needs `npm run dev` running
 npm run verify-deploy  # wait for THIS commit's CI run and report its conclusion
 ```
 
