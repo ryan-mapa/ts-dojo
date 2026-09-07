@@ -10,7 +10,10 @@
          to black, and iOS applies its own rounded mask, so any corners baked in
          show up twice. Lives in public/, and Vite rewrites this href to include
          the /ts-dojo/ base at build time. -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- Older iOS reads only the -precomposed name. Both point at the same file:
+         the art already has no gloss to suppress. -->
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon-precomposed.png" />
     <!-- The <title> is far too long for the label under the icon. -->
     <meta name="apple-mobile-web-app-title" content="ts-dojo" />
     <title>ts-dojo — learn TypeScript by fighting the compiler</title>
