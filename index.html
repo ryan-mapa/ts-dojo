@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%235ac8fa'/%3E%3Ctext x='32' y='45' font-family='ui-monospace,SFMono-Regular,Menlo,monospace' font-size='38' font-weight='700' fill='%2306121a' text-anchor='middle'%3Ets%3C/text%3E%3C/svg%3E" />
+    <!-- iOS ignores rel="icon" for "Add to Home Screen", and cannot read the SVG
+         data URI above either; without this it draws the page's first letter on a
+         plain field. 180x180 PNG, opaque and full-bleed: transparency composites
+         to black, and iOS applies its own rounded mask, so any corners baked in
+         show up twice. Lives in public/, and Vite rewrites this href to include
+         the /ts-dojo/ base at build time. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- The <title> is far too long for the label under the icon. -->
+    <meta name="apple-mobile-web-app-title" content="ts-dojo" />
     <title>ts-dojo — learn TypeScript by fighting the compiler</title>
   </head>
   <body>
